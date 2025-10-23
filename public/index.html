@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Revisão de Salas - UOL</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-video me-2"></i>
+                Sistema de Revisão de Salas
+            </a>
+            <div class="navbar-nav ms-auto">
+                <button class="btn btn-outline-light me-2" onclick="showDashboard()">
+                    <i class="fas fa-chart-bar"></i> Dashboard
+                </button>
+                <button class="btn btn-outline-light" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel"></i> Exportar Excel
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- Dashboard -->
+        <div id="dashboard-section" class="d-none">
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card bg-success text-white">
+                        <div class="card-body text-center">
+                            <h3 id="total-salas">0</h3>
+                            <p>Total de Salas</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-info text-white">
+                        <div class="card-body text-center">
+                            <h3 id="salas-ok">0</h3>
+                            <p>Salas OK</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body text-center">
+                            <h3 id="salas-problemas">0</h3>
+                            <p>Com Problemas</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body text-center">
+                            <h3 id="ultima-revisao">-</h3>
+                            <p>Última Revisão</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="fas fa-history me-2"></i>Últimas Revisões</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="ultimas-revisoes"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lista de Salas -->
+        <div id="salas-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="fas fa-door-open me-2"></i>Salas de Reunião</h2>
+                <div>
+                    <button class="btn btn-success" onclick="showAddSalaModal()">
+                        <i class="fas fa-plus"></i> Nova Sala
+                    </button>
+                    <button class="btn btn-primary" onclick="initData()">
+                        <i class="fas fa-database"></i> Inicializar Dados
+                    </button>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        <input type="text" class="form-control" id="search-salas" placeholder="Buscar salas...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="filter-status">
+                        <option value="">Todos os status</option>
+                        <option value="Revisão OK">Revisão OK</option>
+                        <option value="Em Uso">Em Uso</option>
+                        <option value="Manutenção">Manutenção</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" id="filter-andar">
+                        <option value="">Todos os andares</option>
+                        <option value="13°">13°</option>
+                        <option value="12°">12°</option>
+                        <option value="10°">10°</option>
+                        <option value="9°">9°</option>
+                        <option value="8°">8°</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="salas-container" class="row">
+                <!-- Salas serão carregadas aqui dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Revisão -->
+    <div class="modal fade" id="revisaoModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Revisão de Sala</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="revisaoForm" enctype="multipart/form-data">
+                        <input type="hidden" id="sala-id">
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">TV</label>
+                                <select class="form-select" id="tv" name="tv">
+                                    <option value="OK">OK</option>
+                                    <option value="NOK">NOK</option>
+                                    <option value="N/A">N/A</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Controle</label>
+                                <select class="form-select" id="controle" name="controle">
+                                    <option value="OK">OK</option>
+                                    <option value="NOK">NOK</option>
+                                    <option value="N/A">N/A</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Ramal</label>
+                                <select class="form-select" id="ramal" name="ramal">
+                                    <option value="OK">OK</option>
+                                    <option value="NOK">NOK</option>
+                                    <option value="N/A">N/A</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Videoconferência</label>
+                                <select class="form-select" id="videoconf" name="videoconf">
+                                    <option value="OK">OK</option>
+                                    <option value="NOK">NOK</option>
+                                    <option value="N/A">N/A</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Manual</label>
+                                <select class="form-select" id="manual" name="manual">
+                                    <option value="OK">OK</option>
+                                    <option value="NOK">NOK</option>
+                                    <option value="N/A">N/A</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Monitor</label>
+                                <select class="form-select" id="monitor" name="monitor">
+                                    <option value="OK">OK</option>
+                                    <option value="NOK">NOK</option>
+                                    <option value="N/A">N/A</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Status</label>
+                                <select class="form-select" id="status" name="status">
+                                    <option value="Revisão OK">Revisão OK</option>
+                                    <option value="Em Uso">Em Uso</option>
+                                    <option value="Manutenção">Manutenção</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Troca de Pilha TV</label>
+                                <input type="date" class="form-control" id="troca-pilha-tv" name="troca_pilha_tv">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Observações</label>
+                            <textarea class="form-control" id="observacoes" name="observacoes" rows="3"></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Analista</label>
+                            <input type="text" class="form-control" id="analista" name="analista" value="Kaique" required>
+                        </div>
+
+                        <!-- Seção de Captura de Fotos -->
+                        <div class="mb-3">
+                            <label class="form-label">Foto da Sala</label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="camera-container">
+                                        <video id="video" width="320" height="240" autoplay></video>
+                                        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+                                        <div class="camera-controls mt-2">
+                                            <button type="button" class="btn btn-sm btn-primary" onclick="startCamera()">
+                                                <i class="fas fa-camera"></i> Iniciar Câmera
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-success" onclick="capturePhoto()">
+                                                <i class="fas fa-camera-retro"></i> Capturar
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-secondary" onclick="stopCamera()">
+                                                <i class="fas fa-stop"></i> Parar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="photo-preview">
+                                        <img id="photo-preview" style="max-width: 100%; display: none;" alt="Preview">
+                                        <input type="file" id="photo-input" name="foto" accept="image/*" style="display: none;">
+                                        <button type="button" class="btn btn-sm btn-info" onclick="document.getElementById('photo-input').click()">
+                                            <i class="fas fa-upload"></i> Upload de Arquivo
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="saveRevisao()">Salvar Revisão</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Adicionar Sala -->
+    <div class="modal fade" id="addSalaModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adicionar Nova Sala</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addSalaForm">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Escritório</label>
+                                <input type="text" class="form-control" id="new-escritorio" value="MG" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Sala</label>
+                                <input type="text" class="form-control" id="new-sala" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Andar</label>
+                            <select class="form-select" id="new-andar" required>
+                                <option value="13°">13°</option>
+                                <option value="12°">12°</option>
+                                <option value="10°">10°</option>
+                                <option value="9°">9°</option>
+                                <option value="8°">8°</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="addSala()">Adicionar Sala</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
