@@ -1,207 +1,262 @@
-# Sistema de Revisão de Salas de Reunião - UOL
+# Sistema de Revisão de Salas - UOL
 
-## 🎯 Visão Geral
+Sistema web para gerenciamento e controle de revisões de salas de reunião, desenvolvido para os escritórios do Grupo UOL.
 
-Este sistema automatiza o processo de revisão de salas de reunião, substituindo planilhas manuais por uma aplicação web completa com funcionalidades avançadas.
+## Descrição
 
-## ✨ Funcionalidades Principais
+Aplicação desenvolvida para facilitar o processo de revisão diária das salas de reunião, permitindo o registro do estado dos equipamentos, documentação fotográfica e geração de relatórios históricos.
 
-### 📸 **Captura Automática de Fotos**
-- Integração com webcam para captura de fotos das salas
-- Upload de arquivos de imagem
-- Armazenamento automático com timestamp
-- Visualização de fotos em tamanho completo
+## Funcionalidades Principais
 
-### 📊 **Gerenciamento Digital**
-- Interface web moderna e responsiva
-- Cadastro e edição de salas de reunião
-- Controle de status dos equipamentos (TV, Controle, Ramal, Videoconferência, Manual, Monitor)
-- Sistema de observações e anotações
+### Gerenciamento de Salas
+- Cadastro de salas por escritório e andar
+- Organização por localidade (MG, SP, RJ)
+- Controle de capacidade máxima de salas por andar
+- Exclusão individual ou em lote
 
-### 📈 **Relatórios e Dashboard**
-- Dashboard com estatísticas em tempo real
-- Histórico completo de revisões
-- Filtros por status, andar e busca textual
-- Exportação para Excel automática
+### Sistema de Revisão
+- Checklist de equipamentos:
+  - TV
+  - Controle remoto
+  - Ramal telefônico
+  - Sistema de videoconferência
+  - Manual de uso
+  - Monitor adicional
+- Campo de observações
+- Captura de foto via câmera ou upload
+- Registro automático de data e hora
 
-### 🔄 **Automação**
-- Preenchimento automático de datas
-- Histórico de todas as revisões
-- Alertas visuais para problemas
-- Backup automático dos dados
+### Histórico e Relatórios
+- Visualização completa do histórico de revisões
+- Filtro por período (data inicial e final)
+- Seleção múltipla de revisões
+- Exportação em diversos formatos:
+  - JSON (dados estruturados)
+  - CSV (compatível com Excel)
+  - PDF (via impressão do navegador)
+  - Impressão direta
 
-## 🚀 Instalação e Configuração
-
-### Pré-requisitos
-- Node.js (versão 14 ou superior)
-- NPM (Node Package Manager)
-
-### Passos de Instalação
-
-1. **Clone ou baixe o projeto**
-```bash
-# Se usando git
-git clone <url-do-repositorio>
-cd sistema-revisao-salas
-
-# Ou extraia os arquivos para uma pasta
-```
-
-2. **Instale as dependências**
-```bash
-npm install
-```
-
-3. **Execute o servidor**
-```bash
-npm start
-```
-
-4. **Acesse a aplicação**
-```
-http://localhost:3000
-```
-
-## 📱 Como Usar
-
-### 1. **Inicialização dos Dados**
-- Acesse a aplicação
-- Clique em "Inicializar Dados" para importar as salas da sua planilha
-- Isso criará todas as 21 salas automaticamente
-
-### 2. **Realizar Revisão**
-- Clique em "Revisar" na sala desejada
-- Preencha o status de cada equipamento
-- Adicione observações se necessário
-- Capture uma foto usando a webcam ou faça upload de um arquivo
-- Salve a revisão
-
-### 3. **Visualizar Dashboard**
-- Clique em "Dashboard" para ver estatísticas
-- Visualize o total de salas, status e últimas revisões
-
-### 4. **Exportar Relatórios**
-- Clique em "Exportar Excel" para baixar a planilha atualizada
-- O arquivo será gerado automaticamente com todos os dados
-
-## 🏗️ Estrutura do Projeto
-
-```
-sistema-revisao-salas/
-├── server.js              # Servidor Node.js
-├── package.json           # Dependências e scripts
-├── public/                # Interface web
-│   ├── index.html         # Página principal
-│   ├── styles.css         # Estilos CSS
-│   └── script.js          # JavaScript frontend
-├── uploads/               # Fotos capturadas (criado automaticamente)
-└── salas.db              # Banco de dados SQLite (criado automaticamente)
-```
-
-## 🔧 Tecnologias Utilizadas
-
-- **Backend**: Node.js, Express.js
-- **Banco de Dados**: SQLite3
-- **Frontend**: HTML5, CSS3, JavaScript (Vanilla)
-- **UI Framework**: Bootstrap 5
-- **Ícones**: Font Awesome
-- **Upload de Arquivos**: Multer
-- **Exportação**: XLSX (Excel)
-- **Datas**: Moment.js
-
-## 📊 Benefícios da Automação
-
-### ⏰ **Economia de Tempo**
-- Redução de 70% no tempo de revisão
-- Eliminação de trabalho manual repetitivo
-- Preenchimento automático de campos
-
-### 📸 **Documentação Visual**
-- Fotos automáticas das salas
-- Histórico visual de problemas
-- Evidências fotográficas das revisões
-
-### 📈 **Melhor Controle**
-- Dashboard em tempo real
-- Relatórios automáticos
-- Histórico completo de manutenções
-
-### 🔍 **Rastreabilidade**
-- Quem fez cada revisão
-- Quando foi feita
-- O que foi encontrado
-- Fotos como evidência
-
-## 🎯 Funcionalidades Avançadas
-
-### 📱 **Interface Responsiva**
-- Funciona em desktop, tablet e mobile
-- Interface otimizada para diferentes tamanhos de tela
-
-### 🔍 **Filtros e Busca**
-- Busca por nome da sala
-- Filtro por status
+### Filtros e Busca
+- Busca por número de sala
+- Filtro por escritório/localidade
 - Filtro por andar
-- Combinação de filtros
+- Botão para limpar todos os filtros
 
-### 📊 **Estatísticas em Tempo Real**
-- Total de salas
-- Salas com problemas
-- Últimas revisões realizadas
-- Status geral do sistema
+### Indicadores Visuais
+- Badge verde: sala com revisão realizada
+- Badge vermelho: sala sem revisão
+- Contadores de salas e revisões
+- Status dos equipamentos por cores
 
-### 💾 **Backup e Exportação**
-- Exportação automática para Excel
-- Banco de dados local (SQLite)
-- Fotos armazenadas localmente
+## Tecnologias Utilizadas
 
-## 🔐 Segurança e Privacidade
+### Frontend
+- HTML5
+- CSS3 (design responsivo)
+- JavaScript (ES6+)
+- Bootstrap 5.3.0
+- Font Awesome 6.4.0
 
-- Dados armazenados localmente
+### Armazenamento
+- LocalStorage (navegador)
+- Não requer banco de dados ou servidor
+
+### APIs do Navegador
+- MediaDevices API (acesso à câmera)
+- FileReader API (processamento de imagens)
+- Blob API (geração de arquivos)
+
+## Estrutura do Projeto
+
+```
+Projeto Revisões/
+├── public/
+│   ├── index.html              # Página principal
+│   ├── styles.css              # Estilos globais
+│   ├── js/
+│   │   ├── salas.js           # Lógica principal
+│   │   └── escritorios.js     # Configuração de escritórios
+│   └── assets/
+│       └── logo-uol.png       # Logo corporativa
+└── README.md
+```
+
+## Instalação e Uso
+
+### Requisitos
+- Navegador web moderno (Chrome, Firefox, Edge, Safari)
+- Suporte a JavaScript habilitado
+- Permissão de acesso à câmera (opcional)
+
+### Instalação Local
+
+1. Clone ou baixe o repositório
+```bash
+git clone [url-do-repositorio]
+cd "Projeto Revisões"
+```
+
+2. Abra o arquivo `index.html` diretamente no navegador
+```bash
+# Windows
+start public/index.html
+
+# Linux/Mac
+open public/index.html
+```
+
+Não é necessário servidor web ou instalação de dependências.
+
+## Configuração de Escritórios
+
+As configurações de escritórios e andares estão no arquivo `public/js/escritorios.js`:
+
+```javascript
+const escritoriosConfig = {
+    'MG': {
+        nome: 'Belo Horizonte - MG',
+        andares: {
+            '8': { maxSalas: 10 },
+            '9': { maxSalas: 10 },
+            '10': { maxSalas: 4 }
+        }
+    },
+    // ... outros escritórios
+};
+```
+
+Para adicionar novo escritório ou andar, edite este arquivo seguindo o padrão existente.
+
+## Fluxo de Uso
+
+1. **Adicionar Salas**
+   - Clique em "Adicionar Sala"
+   - Selecione escritório e andar
+   - O número da sala é gerado automaticamente
+   - Confirme para criar
+
+2. **Realizar Revisão**
+   - Localize a sala desejada (use filtros se necessário)
+   - Clique em "Revisar"
+   - Marque os equipamentos presentes
+   - Adicione observações (opcional)
+   - Tire/anexe foto (opcional)
+   - Salve a revisão
+
+3. **Consultar Histórico**
+   - Clique em "Histórico" na sala desejada
+   - Use filtros de data se necessário
+   - Selecione revisões para exportar
+   - Escolha o formato de exportação
+
+4. **Exportar Dados**
+   - Selecione as revisões desejadas
+   - Clique no botão de exportação preferido
+   - O arquivo será baixado automaticamente
+
+## Armazenamento de Dados
+
+### LocalStorage
+Todos os dados são armazenados localmente no navegador usando `localStorage`:
+
+- Chave: `revisoes_salas_cache_v1`
+- Formato: JSON
+- Persistência: permanece até limpeza manual do cache
+
+### Backup Manual
+Para fazer backup dos dados:
+1. Abra o Console do navegador (F12)
+2. Execute: `localStorage.getItem('revisoes_salas_cache_v1')`
+3. Copie e salve o conteúdo em arquivo .json
+
+### Restauração
+Para restaurar backup:
+1. Abra o Console do navegador (F12)
+2. Execute: `localStorage.setItem('revisoes_salas_cache_v1', '[conteúdo-do-backup]')`
+3. Recarregue a página
+
+## Compatibilidade
+
+### Navegadores Suportados
+- Google Chrome 90+
+- Mozilla Firefox 88+
+- Microsoft Edge 90+
+- Safari 14+
+- Opera 76+
+
+### Dispositivos
+- Desktop (Windows, Mac, Linux)
+- Tablets
+- Smartphones (interface responsiva)
+
+### Recursos Opcionais
+- Câmera: necessária apenas para captura de fotos
+- Impressora: necessária apenas para função de impressão
+
+## Segurança e Privacidade
+
+- Dados armazenados apenas localmente no dispositivo
 - Nenhuma informação enviada para servidores externos
-- Controle total sobre os dados
-- Backup automático das informações
+- Fotos armazenadas em Base64 no navegador
+- Acesso à câmera requer permissão explícita do usuário
 
-## 🆘 Suporte e Manutenção
+## Limitações Conhecidas
+
+- Armazenamento limitado pelo navegador (geralmente 5-10 MB)
+- Dados não sincronizados entre dispositivos
+- Backup manual necessário para preservar histórico
+- Fotos em alta resolução podem ocupar muito espaço
+
+## Manutenção
+
+### Limpeza de Dados
+Para limpar todos os dados armazenados:
+```javascript
+localStorage.removeItem('revisoes_salas_cache_v1');
+location.reload();
+```
+
+### Atualização de Versão
+Para atualizar a versão do cache (forçar migração):
+1. Altere `STORAGE_KEY` em `salas.js`
+2. Implemente função de migração se necessário
+
+## Suporte Técnico
 
 ### Problemas Comuns
 
-1. **Erro de permissão da câmera**
-   - Verifique as permissões do navegador
-   - Certifique-se de que a câmera não está sendo usada por outro aplicativo
+**Dados não aparecem:**
+- Verifique o Console (F12) por erros JavaScript
+- Limpe o cache do navegador
+- Certifique-se de que o LocalStorage não foi limpo
 
-2. **Erro ao inicializar dados**
-   - Verifique se o servidor está rodando
-   - Confirme se todas as dependências foram instaladas
+**Erro ao acessar a câmera:**
+- Verifique as permissões do navegador
+- Assegure-se de que nenhum outro aplicativo está usando a câmera
 
-3. **Problemas de exportação**
-   - Verifique se há dados para exportar
-   - Confirme se o navegador permite downloads
+**Problemas na exportação de dados:**
+- Tente novamente após garantir que há dados suficientes
+- Verifique se o navegador permite downloads automáticos
 
-### Logs e Debugging
-- Os logs do servidor aparecem no terminal
-- Use o console do navegador para debug do frontend
-- Verifique o arquivo `salas.db` para dados do banco
-
-## 📞 Contato
-
-Para dúvidas ou suporte, entre em contato com:
-- **Analista**: Kaique Oliveira
-- **Empresa**: UOL
-- **Projeto**: Sistema de Revisão de Salas
+### Contato para Suporte
+- **E-mail**: suporte@uol.com.br
+- **Telefone**: 11 9999-9999
+- **Horário**: Segunda a Sexta, 9h às 18h
 
 ---
 
-## 🎉 Próximos Passos
+## Atualizações e Novas Funcionalidades
 
-Após implementar este sistema, você pode considerar:
+Versão 1.0.0:
+- Lançamento inicial do sistema
 
-1. **Integração com sistemas existentes**
-2. **Notificações automáticas por email**
-3. **Relatórios programados**
-4. **Integração com QR codes nas salas**
-5. **App mobile dedicado**
+Próximas versões:
+- Integração com sistemas de calendário
+- Notificações de manutenção programada
+- Relatórios personalizados por usuário
+- Melhoria na interface de usuário (UX)
 
-Este sistema transformará completamente seu processo de revisão de salas, tornando-o mais eficiente, organizado e profissional! 🚀
+Fique atento às atualizações para aproveitar novas funcionalidades e melhorias de desempenho!
+
 
 
