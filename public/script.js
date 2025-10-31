@@ -3,6 +3,7 @@ let currentStream = null;
 let capturedPhotoData = null;
 let salasData = [];
 let filteredSalas = [];
+let selectedSalas = new Set();
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', function() {
@@ -52,9 +53,13 @@ function renderSalas() {
             <div class="card sala-card status-${getStatusClass(sala.status)} fade-in">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div>
-                            <h5 class="card-title mb-1">${sala.sala}</h5>
-                            <small class="text-muted">${sala.andar} - ${sala.escritorio}</small>
+                        <div class="d-flex align-items-center">
+                            <input type="checkbox" class="form-check-input me-2 sala-checkbox" 
+                                   value="${sala.id}" onchange="toggleSalaSelection(${sala.id})">
+                            <div>
+                                <h5 class="card-title mb-1">${sala.sala}</h5>
+                                <small class="text-muted">${sala.andar} - ${sala.escritorio}</small>
+                            </div>
                         </div>
                         <span class="badge status-badge bg-${getStatusColor(sala.status)}">${sala.status}</span>
                     </div>
@@ -578,5 +583,100 @@ document.addEventListener('click', function(e) {
         showSalasList();
     }
 });
+
+// Funções de seleção e exclusão de salas
+function toggleSalaSelection(salaId) {
+    if (selectedSalas.has(salaId)) {
+        selectedSalas.delete(salaId);
+    } else {
+        selectedSalas.add(salaId);
+    }
+    
+    updateDeleteButton();
+}
+
+function updateDeleteButton() {
+    const deleteBtn = document.getElementById('deleteBtn');
+    if (selectedSalas.size > 0) {
+        deleteBtn.style.display = 'inline-block';
+        deleteBtn.innerHTML = `<i class="fas fa-trash"></i> Excluir (${selectedSalas.size})`;
+    } else {
+        deleteBtn.style.display = 'none';
+    }
+}
+
+function showDeleteModal() {
+    if (selectedSalas.size === 0) {
+        showAlert('Selecione pelo menos uma sala para excluir', 'warning');
+        return;
+    }
+    
+    const selectedSalasList = document.getElementById('selectedSalasList');
+    const selectedSalasArray = Array.from(selectedSalas);
+    const salasToDelete = filteredSalas.filter(sala => selectedSalasArray.includes(sala.id));
+    
+    selectedSalasList.innerHTML = salasToDelete.map(sala => `
+        <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded mb-2">
+            <div>
+                <strong>${sala.sala}</strong> - ${sala.andar} - ${sala.escritorio}
+            </div>
+            <span class="badge bg-${getStatusColor(sala.status)}">${sala.status}</span>
+        </div>
+    `).join('');
+    
+    const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
+    modal.show();
+}
+
+async function confirmDelete() {
+    if (selectedSalas.size === 0) {
+        showAlert('Nenhuma sala selecionada', 'warning');
+        return;
+    }
+    
+    try {
+        const selectedSalasArray = Array.from(selectedSalas);
+        const deletePromises = selectedSalasArray.map(salaId => 
+            fetch(`/api/salas/${salaId}`, { method: 'DELETE' })
+        );
+        
+        const responses = await Promise.all(deletePromises);
+        const allSuccessful = responses.every(response => response.ok);
+        
+        if (allSuccessful) {
+            showAlert(`${selectedSalas.size} sala(s) excluída(s) com sucesso!`, 'success');
+            selectedSalas.clear();
+            updateDeleteButton();
+            loadSalas();
+            bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+        } else {
+            throw new Error('Erro ao excluir algumas salas');
+        }
+    } catch (error) {
+        console.error('Erro ao excluir salas:', error);
+        showAlert('Erro ao excluir salas', 'danger');
+    }
+}
+
+// Função para selecionar/deselecionar todas as salas
+function toggleAllSalas() {
+    const checkboxes = document.querySelectorAll('.sala-checkbox');
+    const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = !allChecked;
+        toggleSalaSelection(parseInt(checkbox.value));
+    });
+}
+
+// Função para limpar seleção
+function clearSelection() {
+    selectedSalas.clear();
+    const checkboxes = document.querySelectorAll('.sala-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+    });
+    updateDeleteButton();
+}
 
 

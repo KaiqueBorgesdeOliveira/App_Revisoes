@@ -173,6 +173,56 @@ app.post('/api/salas', (req, res) => {
   });
 });
 
+// Excluir sala
+app.delete('/api/salas/:id', (req, res) => {
+  const { id } = req.params;
+  
+  // Primeiro, buscar informações da sala para deletar a foto se existir
+  db.get('SELECT foto_path FROM salas WHERE id = ?', [id], (err, row) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+    
+    if (!row) {
+      res.status(404).json({ error: 'Sala não encontrada' });
+      return;
+    }
+    
+    // Deletar a foto do sistema de arquivos se existir
+    if (row.foto_path && fs.existsSync(row.foto_path)) {
+      fs.unlink(row.foto_path, (err) => {
+        if (err) {
+          console.error('Erro ao deletar foto:', err);
+        }
+      });
+    }
+    
+    // Deletar registros do histórico primeiro (devido à foreign key)
+    db.run('DELETE FROM historico_revisoes WHERE sala_id = ?', [id], (err) => {
+      if (err) {
+        res.status(500).json({ error: err.message });
+        return;
+      }
+      
+      // Deletar a sala
+      db.run('DELETE FROM salas WHERE id = ?', [id], function(err) {
+        if (err) {
+          res.status(500).json({ error: err.message });
+          return;
+        }
+        
+        if (this.changes === 0) {
+          res.status(404).json({ error: 'Sala não encontrada' });
+          return;
+        }
+        
+        res.json({ message: 'Sala excluída com sucesso', changes: this.changes });
+      });
+    });
+  });
+});
+
 // Exportar para Excel
 app.get('/api/export/excel', (req, res) => {
   db.all('SELECT * FROM salas ORDER BY andar, sala', (err, rows) => {
@@ -301,5 +351,6 @@ app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
   console.log(`Acesse: http://localhost:${PORT}`);
 });
+
 
 
