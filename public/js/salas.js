@@ -905,14 +905,14 @@ function setupHistoryImageHandlers() {
     });
 }
 
-/* Injeta estilos simples */
+/* Injeta estilos responsivos otimizados */
 function injectResponsiveStyles() {
     if (document.getElementById('salas-responsive-styles')) return;
     const css = `
         #salas-container { 
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
             margin-top: 1.5rem;
         }
         
@@ -920,12 +920,13 @@ function injectResponsiveStyles() {
             background: #fff;
             border: 1px solid #dee2e6;
             border-radius: 10px;
-            padding: 1.25rem;
+            padding: 1rem;
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             transition: transform 0.2s, box-shadow 0.2s;
             position: relative;
             display: flex;
             flex-direction: column;
+            min-height: 280px;
         }
         
         .sala-card:hover {
@@ -935,13 +936,14 @@ function injectResponsiveStyles() {
         
         .status-badge {
             position: absolute;
-            top: 12px;
-            right: 12px;
-            padding: 0.25rem 0.75rem;
+            top: 10px;
+            right: 10px;
+            padding: 0.25rem 0.65rem;
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 600;
             color: white;
+            white-space: nowrap;
         }
         
         .status-badge-success {
@@ -959,25 +961,25 @@ function injectResponsiveStyles() {
         
         .sala-card .text-muted {
             color: #6c757d;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             margin: 0.5rem 0;
         }
         
         .equipamentos-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 0.5rem;
-            margin: 1rem 0;
+            gap: 0.4rem;
+            margin: 0.75rem 0;
         }
         
         .equipamento-item { 
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem;
+            gap: 0.4rem;
+            padding: 0.4rem;
             background: #f8f9fa;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
         
         .equip-dot {
@@ -996,39 +998,41 @@ function injectResponsiveStyles() {
         }
         
         .equip-label {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #495057;
         }
         
         .ultima-revisao {
             margin-top: 0.75rem;
             color: #666;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
         }
         
         .card-footer {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
             margin-top: auto;
-            padding-top: 1rem;
+            padding-top: 0.75rem;
             border-top: 1px solid #e9ecef;
             flex-wrap: wrap;
         }
         
         .card-footer .btn {
             flex: 1;
-            min-width: 80px;
-            font-size: 0.85rem;
-            padding: 0.4rem 0.75rem;
+            min-width: 70px;
+            font-size: 0.8rem;
+            padding: 0.4rem 0.6rem;
+            white-space: nowrap;
         }
         
         .sala-select {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
             cursor: pointer;
+            flex-shrink: 0;
         }
         
         .history-entry { 
@@ -1040,24 +1044,33 @@ function injectResponsiveStyles() {
             border-bottom: none;
         }
         
+        .history-select {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
         .history-date {
             font-weight: 600;
             color: #495057;
             margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
         
         .history-equips {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.4rem;
             margin: 0.5rem 0;
         }
         
         .hist-equip-tag {
-            padding: 0.25rem 0.75rem;
+            padding: 0.25rem 0.65rem;
             border-radius: 12px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 500;
+            white-space: nowrap;
         }
         
         .hist-equip-tag.present {
@@ -1075,10 +1088,12 @@ function injectResponsiveStyles() {
             padding: 0.5rem;
             background: #f8f9fa;
             border-radius: 6px;
+            font-size: 0.85rem;
         }
         
         .history-thumb { 
-            max-width: 160px;
+            max-width: 100%;
+            height: auto;
             border-radius: 6px;
             cursor: pointer;
             margin-top: 0.5rem;
@@ -1092,30 +1107,116 @@ function injectResponsiveStyles() {
         }
         
         .history-filters input[type="date"] {
-            height: 36px;
+            min-height: 44px;
         }
         
         .history-list {
-            max-height: 400px;
+            max-height: 50vh;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
         
-        @media (max-width:768px) {
+        .export-actions {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #fff3cd;
+            border-radius: 8px;
+            border: 1px solid #ffc107;
+        }
+        
+        .export-actions .btn {
+            min-height: 44px;
+        }
+        
+        /* Tablet */
+        @media (max-width: 1024px) {
+            #salas-container {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 0.75rem;
+            }
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
             #salas-container { 
                 grid-template-columns: 1fr;
-                gap: 1rem; 
+                gap: 0.75rem;
             }
+            
             .sala-card { 
-                padding: 1rem; 
+                padding: 0.875rem;
+                min-height: auto;
             }
+            
             .equipamentos-grid {
                 grid-template-columns: 1fr;
+                gap: 0.5rem;
             }
+            
+            .equipamento-item {
+                padding: 0.5rem;
+            }
+            
             .card-footer { 
-                flex-direction: column; 
+                flex-direction: column;
+                gap: 0.5rem;
             }
+            
             .card-footer .btn { 
-                width: 100%; 
+                width: 100%;
+                min-height: 44px;
+                font-size: 0.9rem;
+            }
+            
+            .history-filters > div {
+                flex-direction: column;
+                align-items: stretch !important;
+            }
+            
+            .history-filters input,
+            .history-filters button {
+                width: 100%;
+                max-width: 100% !important;
+            }
+            
+            .export-actions > div {
+                flex-direction: column;
+            }
+            
+            .export-actions .btn {
+                width: 100%;
+            }
+        }
+        
+        /* Mobile Pequeno */
+        @media (max-width: 480px) {
+            .sala-card {
+                padding: 0.75rem;
+            }
+            
+            .sala-card strong {
+                font-size: 1rem;
+            }
+            
+            .status-badge {
+                font-size: 0.65rem;
+                padding: 0.2rem 0.5rem;
+            }
+            
+            .equipamento-item,
+            .ultima-revisao {
+                font-size: 0.75rem;
+            }
+            
+            .card-footer .btn {
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Orientação paisagem */
+        @media (max-width: 768px) and (orientation: landscape) {
+            #salas-container {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     `;
@@ -1127,7 +1228,7 @@ function injectResponsiveStyles() {
 
 /* Inicialização */
 document.addEventListener('DOMContentLoaded', () => {
-    injectResponsiveStyles();
+    injectResponsiveStyles(); // <- IMPORTANTE: Esta linha deve estar aqui!
     loadCache();
 
     const modalAdd = document.getElementById('addSalaModal');
