@@ -250,6 +250,7 @@ Para atualizar a versão do cache (forçar migração):
 Versão 1.0.0:
 - Lançamento inicial do sistema
 
+
 Próximas versões:
 - Integração com sistemas de calendário
 - Notificações de manutenção programada
